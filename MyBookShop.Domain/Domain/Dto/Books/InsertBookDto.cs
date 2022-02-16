@@ -36,5 +36,7 @@ namespace MyBook.Domain.Domain.Dto.Books
         public int IdTypeBook { get; set; }
 
         public int IdState { get; set; }
+         
+        public int IdEditorial { get; set; }
     }
 }

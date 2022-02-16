@@ -29,7 +29,7 @@ namespace Infraestructure.Core.UnitOfWork.Interface
 
         IRepository<BookEntity> BooksRepository { get; }
 
-        IRepository<UserBookEntity> UserBookRepository { get; }
+        IRepository<EditorialEntity> EditorialRepository { get; }
 
         IRepository<TypeBookEntity> TypeBookRepository { get; }
 

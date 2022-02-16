@@ -40,6 +40,9 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
+                    b.Property<int>("IdEditorial")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdState")
                         .HasColumnType("int");
 
@@ -52,6 +55,8 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasKey("IdBook");
 
+                    b.HasIndex("IdEditorial");
+
                     b.HasIndex("IdState");
 
                     b.HasIndex("IdTypeBook")
@@ -60,26 +65,20 @@ namespace Infraestructure.Core.Migrations
                     b.ToTable("Book","Library");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.Library.UserBookEntity", b =>
+            modelBuilder.Entity("Infraestructure.Entity.Models.Library.EditorialEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdEditorial")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("IdBook")
-                        .HasColumnType("int");
+                    b.Property<string>("Editorial")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
-                    b.Property<int>("IdUser")
-                        .HasColumnType("int");
+                    b.HasKey("IdEditorial");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdBook");
-
-                    b.HasIndex("IdUser");
-
-                    b.ToTable("UserBook","Library");
+                    b.ToTable("Editorial","Library");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.Master.StateEntity", b =>
@@ -262,6 +261,12 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.Library.BookEntity", b =>
                 {
+                    b.HasOne("Infraestructure.Entity.Models.Library.EditorialEntity", "EditorialEntity")
+                        .WithMany()
+                        .HasForeignKey("IdEditorial")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Infraestructure.Entity.Models.Master.StateEntity", "StateEntity")
                         .WithMany()
                         .HasForeignKey("IdState")
@@ -271,21 +276,6 @@ namespace Infraestructure.Core.Migrations
                     b.HasOne("Infraestructure.Entity.Models.Master.TypeBookEntity", "TypeBookEntity")
                         .WithOne("bookEntity")
                         .HasForeignKey("Infraestructure.Entity.Models.Library.BookEntity", "IdTypeBook")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.Library.UserBookEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.Library.BookEntity", "BookEntity")
-                        .WithMany("userBookEntity")
-                        .HasForeignKey("IdBook")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestructure.Entity.Models.UserEntity", "UserEntity")
-                        .WithMany("userBookEntities")
-                        .HasForeignKey("IdUser")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

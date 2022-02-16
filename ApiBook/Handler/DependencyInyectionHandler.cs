@@ -4,6 +4,8 @@ using Infraestructure.Core.Repository.Interface;
 using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Microsoft.Extensions.DependencyInjection;
+using MyBook.Domain.Domain.Services;
+using MyBook.Domain.Domain.Services.IServices;
 using MyBookShop.Domain.Domain.Services;
 using MyBookShop.Domain.Domain.Services.Iservices;
 using MyBookShop.Domain.Domain.Services.IServices;
@@ -27,8 +29,8 @@ namespace ApiBook.Handler
             //Domain
             services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IRolServices, RolServices>();
-            //services.AddTransient<IPetServices, PetServices>();
-            //services.AddTransient<IDateService, DateService>();
+            services.AddTransient<IBookService, BookServices>();
+            services.AddTransient<IEditorialServices, EditorialServices>();
         }
     }
 }

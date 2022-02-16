@@ -79,7 +79,7 @@ namespace Common.Utils.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El campo de inserto correctamente.
+        ///   Busca una cadena traducida similar a El campo se inserto correctamente.
         /// </summary>
         public static string ItemInserted {
             get {

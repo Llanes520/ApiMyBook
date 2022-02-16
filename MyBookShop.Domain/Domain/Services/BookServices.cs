@@ -4,6 +4,7 @@ using Infraestructure.Entity.Models.Library;
 using Infraestructure.Entity.Models.Master;
 using MyBook.Domain.Domain.Dto;
 using MyBook.Domain.Domain.Dto.Books;
+using MyBook.Domain.Domain.Dto.Editoriales;
 using MyBook.Domain.Domain.Services.IServices;
 using MyBookShop.Domain.Domain.Dto;
 using System;
@@ -31,11 +32,11 @@ namespace MyBook.Domain.Domain.Services
 
         #region Methods
 
-        public List<ConsultBookDto> GetAllBook(int idbook)
+        public List<ConsultBookDto> GetAllBook()
         {
-            var pets = _unitOfWork.BooksRepository.FindAll(x => x.IdBook == idbook,
-                                                        p => p.TypeBookEntity,
-                                                        p => p.StateEntity).ToList();
+            var pets = _unitOfWork.BooksRepository.GetAll(p => p.TypeBookEntity,
+                                                            p => p.StateEntity,
+                                                            p => p.EditorialEntity).ToList();
 
             List<ConsultBookDto> list = pets.Select(x => new ConsultBookDto
             {
@@ -45,10 +46,13 @@ namespace MyBook.Domain.Domain.Services
                 Author = x.Author,
                 DatePreRealease = x.DatePreRealease,
                 DateRealease = x.DateRealease,
-                IdTypeBook = x.IdTypeBook,
-                IdState = x.IdState,
                 TypeBook = x.TypeBookEntity.TypeBook,
                 State = x.StateEntity.State,
+                PreRelease = x.DatePreRealease.ToString("yyyy-MM-dd"),
+                IdState = x.IdState,
+                IdTypeBook = x.IdTypeBook,
+                IdEditorial = x.IdEditorial,
+                Editorial = x.EditorialEntity.Editorial,
 
             }).ToList();
 
@@ -68,6 +72,19 @@ namespace MyBook.Domain.Domain.Services
 
             return list;
         }
+        
+        public List<EditorialDto> GetAllEditorial()
+        {
+            List<EditorialEntity> typeEditorial = _unitOfWork.EditorialRepository.GetAll().ToList();
+
+            List<EditorialDto> list = typeEditorial.Select(x => new EditorialDto
+            {
+                IdEditorial = x.IdEditorial,
+                Editorial = x.Editorial
+            }).ToList();
+
+            return list;
+        }
 
         public async Task<ResponseDto> DeleteBookAsync(int idBook)
         {
@@ -76,30 +93,27 @@ namespace MyBook.Domain.Domain.Services
             _unitOfWork.BooksRepository.Delete(idBook);
             response.IsSuccess = await _unitOfWork.Save() > 0;
             if (response.IsSuccess)
-                response.Message = "Se elminnó correctamente la Mascota";
+                response.Message = "Se elminnó correctamente el libro";
             else
-                response.Message = "Hubo un error al eliminar la Mascota, por favor vuelva a intentalo";
+                response.Message = "Hubo un error al eliminar el libro, por favor vuelva a intentalo";
 
             return response;
         }
 
-        public async Task<bool> InsertBookAsync(InsertBookDto book, int idUser)
+        public async Task<bool> InsertBookAsync(InsertBookDto book)
         {
-             UserBookEntity userBookEntity = new UserBookEntity()
+            var bookEntity = new BookEntity()
             {
-                IdUser = idUser,
-                bookEntity = new BookEntity()
-                {
-                    Name = book.Name,
-                    Descriptin = book.Descriptin,
-                    Author = book.Author,
-                    DatePreRealease = book.DatePreRealease,
-                    IdTypeBook = book.IdTypeBook,
-                    IdState = (int)Enums.State.Preaprobado,
-                }
+                Name = book.Name,
+                Descriptin = book.Descriptin,
+                Author = book.Author,
+                DatePreRealease = book.DatePreRealease,
+                IdTypeBook = book.IdTypeBook,
+                IdState = (int)Enums.State.Preaprobado,
+                IdEditorial = book.IdEditorial,
             };
 
-            _unitOfWork.UserBookRepository.Insert(userBookEntity);
+            _unitOfWork.BooksRepository.Insert(bookEntity);
             return await _unitOfWork.Save() > 0;
         }
 
@@ -115,6 +129,7 @@ namespace MyBook.Domain.Domain.Services
                 bookEntity.Author = book.Author;
                 bookEntity.DatePreRealease = book.DatePreRealease;
                 bookEntity.IdTypeBook = book.IdTypeBook;
+                bookEntity.IdEditorial = book.IdEditorial;
 
                 _unitOfWork.BooksRepository.Update(bookEntity);
 

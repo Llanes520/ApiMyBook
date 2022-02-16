@@ -71,5 +71,24 @@ namespace Common.Utils.Enums
             Editor = 2,
             Estandar = 3,
         }
+
+        public enum User
+        {
+            idUSer = 1,
+        }
+
+        public enum TypeBook
+        {
+            Revista = 1,
+            Libro = 2,
+            Comic = 3,
+        }
+        public enum Editorial
+        {
+            Periodistico = 1,
+            Noticia = 2,
+            Historieta = 3,
+        }
+
     }
 }

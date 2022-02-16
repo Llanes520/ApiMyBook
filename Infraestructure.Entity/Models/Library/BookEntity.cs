@@ -26,6 +26,7 @@ namespace Infraestructure.Entity.Models.Library
 
         public DateTime? DateRealease { get; set; }
 
+
         [ForeignKey("TypeBookEntity")]
         public int IdTypeBook { get; set; }
         public TypeBookEntity TypeBookEntity { get; set; }
@@ -34,6 +35,8 @@ namespace Infraestructure.Entity.Models.Library
         public int IdState { get; set; }
         public StateEntity StateEntity { get; set; }
 
-        public IEnumerable<UserBookEntity> userBookEntity { get; set; }
+        [ForeignKey("EditorialEntity")]
+        public int IdEditorial { get; set; }
+        public EditorialEntity EditorialEntity { get; set; }
     }
 }

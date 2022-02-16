@@ -1,5 +1,6 @@
 ﻿using Common.Utils.Enums;
 using Infraestructure.Entity.Models;
+using Infraestructure.Entity.Models.Library;
 using Infraestructure.Entity.Models.Master;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,9 @@ namespace Infraestructure.Core.Data
 {
     public class SeedDb
     {
-        private readonly DataContext _context;
+        #region Attributhes
+        private readonly DataContext _context; 
+        #endregion
 
         #region Builder
         public SeedDb(DataContext context)
@@ -20,21 +23,24 @@ namespace Infraestructure.Core.Data
         }
         #endregion
 
+        /*
+        Despues de ejecutar la data semilla, crear un usuario y libros en la Db
+        Nota: me falto el editorial
+        */
 
         public async Task ExecSeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
+            await CheckUserAsync();
             await CheckTypeStateAsync();
             await CheckStateAsync();
             await CheckTypePermissionAsync();
             await CheckPermissionAsync();
             await CheckRolAsync();
             await CheckRolPermissonAsync();
-
-            //await CheckTypeIdentificationAsync();
-            //await CheckUserAsync();
-            //await CheckRolUserAsync();
-            //await CheckCategory();
+            await CheckRolUserAsync();
+            await CheckTypeBookEntityAsync();
+            await CheckEditorialEntityAsync();
         }
 
         private async Task CheckTypeStateAsync()
@@ -299,6 +305,85 @@ namespace Infraestructure.Core.Data
             }
         }
 
+        private async Task CheckUserAsync()
+        {
+            if (!_context.UserEntity.Any())
+            {
+                _context.UserEntity.AddRange(new List<UserEntity>
+                {
+                    new UserEntity
+                    {
+                        Name ="Pablo",
+                        LastName="Rodriguez",
+                        Email="Pablo@gmail.com",
+                        Password="123456"
+                    }
+                });
 
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckRolUserAsync()
+        {
+            if (!_context.RolUserEntity.Any())
+            {
+                _context.RolUserEntity.AddRange(new List<RolUserEntity>
+                {
+                    new RolUserEntity
+                    {
+                        IdRol = (int)Enums.RolUser.Administrador,
+                        IdUser = (int)Enums.User.idUSer,
+                    }
+                });
+
+                await _context.SaveChangesAsync();
+            }
+        }
+        private async Task CheckTypeBookEntityAsync()
+        {
+            if (!_context.TypeBookEntity.Any())
+            {
+                _context.TypeBookEntity.AddRange(new List<TypeBookEntity>
+                {
+                    new TypeBookEntity
+                    {
+                        TypeBook = "Revista"
+                    },
+                    new TypeBookEntity
+                    {
+                        TypeBook = "Libro"
+                    },
+                    new TypeBookEntity
+                    {
+                        TypeBook = "Comic"
+                    },
+                });
+
+                await _context.SaveChangesAsync();
+            }
+        }private async Task CheckEditorialEntityAsync()
+        {
+            if (!_context.EditorialEntity.Any())
+            {
+                _context.EditorialEntity.AddRange(new List<EditorialEntity>
+                {
+                    new EditorialEntity
+                    {
+                        Editorial = "Periodistico"
+                    },
+                    new EditorialEntity
+                    {
+                        Editorial = "Noticia"
+                    },
+                    new EditorialEntity
+                    {
+                        Editorial = "Historieta"
+                    },
+                });
+
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

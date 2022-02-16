@@ -30,7 +30,6 @@ namespace Infraestructure.Entity.Models
         public string Password { get; set; }
 
         public IEnumerable<RolUserEntity> RolUserEntities { get; set;}
-        public IEnumerable<UserBookEntity> userBookEntities { get; set;}
 
         [NotMapped]
         public string FullName { get { return $"{this.Name} {this.LastName}"; } }

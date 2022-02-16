@@ -22,9 +22,9 @@ namespace Infraestructure.Core.Data
         public DbSet<RolPermissionEntity> RolPermissionEntity { get; set; } 
         public DbSet<TypePermissionEntity> TypePermissionEntity { get; set; }
 
+        public DbSet<EditorialEntity> EditorialEntity { get; set; }
         public DbSet<BookEntity> BookEntity { get; set; }
-        public DbSet<UserBookEntity> UserBookEntity { get; set; }
-
+         
         public DbSet<StateEntity> StateEntity { get; set; }
         public DbSet<TypeBookEntity> TypeBookEntity { get; set; }
         public DbSet<TypeStateEntity> TypeStateEntity { get; set; }

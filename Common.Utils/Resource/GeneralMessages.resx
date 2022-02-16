@@ -125,7 +125,7 @@
     <value>Ha ocurrido un error</value>
   </data>
   <data name="ItemInserted" xml:space="preserve">
-    <value>El campo de inserto correctamente</value>
+    <value>El campo se inserto correctamente</value>
   </data>
   <data name="ItemNoInserted" xml:space="preserve">
     <value>Ha ocurrido un error al insertar el campo </value>

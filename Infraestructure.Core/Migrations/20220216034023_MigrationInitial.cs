@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infraestructure.Core.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class MigrationInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,6 +15,20 @@ namespace Infraestructure.Core.Migrations
 
             migrationBuilder.EnsureSchema(
                 name: "Security");
+
+            migrationBuilder.CreateTable(
+                name: "Editorial",
+                schema: "Library",
+                columns: table => new
+                {
+                    IdEditorial = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Editorial = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Editorial", x => x.IdEditorial);
+                });
 
             migrationBuilder.CreateTable(
                 name: "TypeBook",
@@ -171,11 +185,19 @@ namespace Infraestructure.Core.Migrations
                     DatePreRealease = table.Column<DateTime>(nullable: false),
                     DateRealease = table.Column<DateTime>(nullable: true),
                     IdTypeBook = table.Column<int>(nullable: false),
-                    IdState = table.Column<int>(nullable: false)
+                    IdState = table.Column<int>(nullable: false),
+                    IdEditorial = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Book", x => x.IdBook);
+                    table.ForeignKey(
+                        name: "FK_Book_Editorial_IdEditorial",
+                        column: x => x.IdEditorial,
+                        principalSchema: "Library",
+                        principalTable: "Editorial",
+                        principalColumn: "IdEditorial",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Book_State_IdState",
                         column: x => x.IdState,
@@ -221,34 +243,11 @@ namespace Infraestructure.Core.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "UserBook",
+            migrationBuilder.CreateIndex(
+                name: "IX_Book_IdEditorial",
                 schema: "Library",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdBook = table.Column<int>(nullable: false),
-                    IdUser = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserBook", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserBook_Book_IdBook",
-                        column: x => x.IdBook,
-                        principalSchema: "Library",
-                        principalTable: "Book",
-                        principalColumn: "IdBook",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserBook_User_IdUser",
-                        column: x => x.IdUser,
-                        principalSchema: "Security",
-                        principalTable: "User",
-                        principalColumn: "IdUser",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                table: "Book",
+                column: "IdEditorial");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Book_IdState",
@@ -262,18 +261,6 @@ namespace Infraestructure.Core.Migrations
                 table: "Book",
                 column: "IdTypeBook",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserBook_IdBook",
-                schema: "Library",
-                table: "UserBook",
-                column: "IdBook");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserBook_IdUser",
-                schema: "Library",
-                table: "UserBook",
-                column: "IdUser");
 
             migrationBuilder.CreateIndex(
                 name: "IX_State_IdTypeState",
@@ -322,7 +309,7 @@ namespace Infraestructure.Core.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserBook",
+                name: "Book",
                 schema: "Library");
 
             migrationBuilder.DropTable(
@@ -334,8 +321,16 @@ namespace Infraestructure.Core.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
-                name: "Book",
+                name: "Editorial",
                 schema: "Library");
+
+            migrationBuilder.DropTable(
+                name: "State",
+                schema: "Master");
+
+            migrationBuilder.DropTable(
+                name: "TypeBook",
+                schema: "Master");
 
             migrationBuilder.DropTable(
                 name: "Permission",
@@ -350,20 +345,12 @@ namespace Infraestructure.Core.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
-                name: "State",
-                schema: "Master");
-
-            migrationBuilder.DropTable(
-                name: "TypeBook",
+                name: "TypeState",
                 schema: "Master");
 
             migrationBuilder.DropTable(
                 name: "TypePermission",
                 schema: "Security");
-
-            migrationBuilder.DropTable(
-                name: "TypeState",
-                schema: "Master");
         }
     }
 }

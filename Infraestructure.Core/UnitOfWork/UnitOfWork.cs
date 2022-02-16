@@ -42,12 +42,12 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<RolPermissionEntity> rolPermissionRepository;
 
         private IRepository<BookEntity> booksRepository;
-        private IRepository<UserBookEntity> userBookRepository;
+        private IRepository<EditorialEntity> editorialRepository;
         private IRepository<TypeBookEntity> typeBookRepository;
         #endregion
 
 
-        #region Members
+        
         public IRepository<UserEntity> UserRepository
         {
             get
@@ -147,14 +147,14 @@ namespace Infraestructure.Core.UnitOfWork
             }
         }
 
-        public IRepository<UserBookEntity> UserBookRepository
+        public IRepository<EditorialEntity> EditorialRepository
         {
             get
             {
-                if (this.userBookRepository == null)
-                    this.userBookRepository = new Repository<UserBookEntity>(_context);
+                if (this.editorialRepository == null)
+                    this.editorialRepository = new Repository<EditorialEntity>(_context);
 
-                return userBookRepository;
+                return editorialRepository;
             }
         }
 
@@ -170,7 +170,6 @@ namespace Infraestructure.Core.UnitOfWork
         }
 
 
-        #endregion
 
 
         protected virtual void Dispose(bool disposing)

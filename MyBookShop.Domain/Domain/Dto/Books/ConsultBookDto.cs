@@ -9,8 +9,7 @@ namespace MyBook.Domain.Domain.Dto.Books
     {
         public string TypeBook { get; set; }
         public string PreRelease { get; set; }
-        public string Release { get; set; }
         public string State { get; set; }
-        public int IdUser { get; set; }
+        public string Editorial { get; set; }
     }
 }
