@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Infraestructure.Entity.Models.Security;
 
 namespace Infraestructure.Core.UnitOfWork
 {
@@ -35,8 +36,8 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<UserEntity> userRepository;
         private IRepository<RolEntity> rolRepository;
         private IRepository<RolUserEntity> rolUserRepository;
-        private IRepository<StateEntity> stateRepository;
-        private IRepository<TypeStateEntity> typeStateRepository;
+        private IRepository<Authors_has_BooksEntity> authors_has_BooksRepository;
+        private IRepository<AuthorsEntity> authorsRepository;
         private IRepository<PermissionEntity> permissionRepository;
         private IRepository<TypePermissionEntity> typePermissionRepository;
         private IRepository<RolPermissionEntity> rolPermissionRepository;
@@ -81,25 +82,25 @@ namespace Infraestructure.Core.UnitOfWork
             }
         }
 
-        public IRepository<StateEntity> StateRepository
+        public IRepository<Authors_has_BooksEntity> Authors_has_BooksRepository
         {
             get
             {
-                if (this.stateRepository == null)
-                    this.stateRepository = new Repository<StateEntity>(_context);
+                if (this.authors_has_BooksRepository == null)
+                    this.authors_has_BooksRepository = new Repository<Authors_has_BooksEntity>(_context);
 
-                return stateRepository;
+                return authors_has_BooksRepository;
             }
         }
 
-        public IRepository<TypeStateEntity> TypeStateRepository
+        public IRepository<AuthorsEntity> AuthorsRepository
         {
             get
             {
-                if (this.typeStateRepository == null)
-                    this.typeStateRepository = new Repository<TypeStateEntity>(_context);
+                if (this.authorsRepository == null)
+                    this.authorsRepository = new Repository<AuthorsEntity>(_context);
 
-                return typeStateRepository;
+                return authorsRepository;
             }
         }
 

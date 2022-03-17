@@ -10,33 +10,20 @@ namespace MyBook.Domain.Domain.Dto.Books
         [Required(ErrorMessage = "El nombre es requerido")]
         [MaxLength(100)]
         [Display(Name = "Nombre")]
-        public string Name { get; set; }
+        public string Titulo { get; set; }
 
         [Required(ErrorMessage = "La descripcion es requerida")]
         [MaxLength(300)]
         [Display(Name = "Descripcion")]
-        public string Descriptin { get; set; }
+        public string Sipnosis { get; set; }
 
-        [Required(ErrorMessage = "El nombre del autor es requerido")]
-        [MaxLength(100)]
-        [Display(Name = "Autor")]
-        public string Author { get; set; }
+        public int Paginas { get; set; }
 
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "La fecha de preaprobado es requerida")]
-        [Display(Name = "Fecha preaprobado")]
-        public DateTime DatePreRealease { get; set; }
-
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "La fecha de aprobado es requerida")]
-        [Display(Name = "Fecha aprobado")]
-        public DateTime? DateRealease { get; set; }
-
-        [Required(ErrorMessage = "El typo de libro es requerido es requerida")]
+        [Required(ErrorMessage = "El typo de libro es requerido")]
         public int IdTypeBook { get; set; }
-
-        public int IdState { get; set; }
          
         public int IdEditorial { get; set; }
+
+        public int IdAuthors { get; set; }
     }
 }

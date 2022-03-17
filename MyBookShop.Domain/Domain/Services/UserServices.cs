@@ -1,4 +1,5 @@
 ﻿using Common.Utils.Constant;
+using Common.Utils.Enums;
 using Common.Utils.Exeption;
 using Common.Utils.Resource;
 using Common.Utils.Utils;
@@ -7,6 +8,7 @@ using Infraestructure.Entity.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyBook.Domain.Domain.Dto;
+using MyBook.Domain.Domain.Dto.Users;
 using MyBookShop.Domain.Domain.Dto;
 using MyBookShop.Domain.Domain.Services.Iservices;
 using System;
@@ -89,36 +91,61 @@ namespace MyBookShop.Domain.Domain.Services
         #endregion
 
         #region Methods
-        public List<UserEntity> GetAllUser()
+        public List<UpdateUserDto> GetAllUser()
         {
-            return _unitOfWork.UserRepository.GetAll().ToList();
-        }
-        public UserEntity GetUser(int idUser)
-        {
-            return _unitOfWork.UserRepository.Find(x => x.IdUser == idUser);
-        }
+            var users = _unitOfWork.UserRepository.GetAll().ToList();
 
-        public async Task<bool> UpdateUser(UserEntity user)
-        {
-            UserEntity _user = GetUser(user.IdUser);
+            List<UpdateUserDto> list = users.Select(x => new UpdateUserDto
+            {
+                IdUser = x.IdUser,
+                Name = x.Name,
+                LastName = x.LastName,
+                Email = x.Email,
 
-            _user.Name = user.Name;
-            _user.LastName = user.LastName;
-            _unitOfWork.UserRepository.Update(_user);
+            }).ToList();
 
-            return await _unitOfWork.Save() > 0;
 
-            //return _uniOfWork.UserRepository.Find(x => x.IdUser == idUser);
+            return list;
+
         }
 
-        public async Task<bool> DeleteUser(int idUser)
+        public async Task<bool> UpdateUser(UpdateUserDto user)
         {
+            bool result = false;
+
+            UserEntity userEntity = _unitOfWork.UserRepository.FirstOrDefault(x => x.IdUser == user.IdUser);
+            if (userEntity != null)
+            {
+                userEntity.Name = user.Name;
+                userEntity.LastName = user.LastName;
+                userEntity.Email = user.Email;
+                userEntity.Password = user.Password;
+
+                _unitOfWork.UserRepository.Update(userEntity);
+
+                result = await _unitOfWork.Save() > 0;
+            }
+
+            return result;
+
+        }
+
+        public async Task<ResponseDto> DeleteUser(int idUser)
+        {
+            ResponseDto response = new ResponseDto();
+
             _unitOfWork.UserRepository.Delete(idUser);
+            response.IsSuccess = await _unitOfWork.Save() > 0;
+            if (response.IsSuccess)
+                response.Message = "Se elminnó correctamente el usuario";
+            else
+                response.Message = "Hubo un error al eliminar el usuario, por favor vuelva a intentalo";
 
-            return await _unitOfWork.Save() > 0;
+            return response;
+
         }
 
-        public async Task<bool> CreateUser(UserEntity data)
+        public async Task<bool> InsertUser(InsertUserDto data)
         {
             ResponseDto result = new ResponseDto();
 
@@ -126,19 +153,21 @@ namespace MyBookShop.Domain.Domain.Services
             {
                 if (_unitOfWork.UserRepository.FirstOrDefault(x => x.Email == data.Email) == null)
                 {
-                    int idRol = data.IdUser;
-                    data.Password = "123456";
-                    data.IdUser = 0;
-
                     RolUserEntity rolUser = new RolUserEntity()
                     {
-                        IdRol = idRol,
-                        UserEntity = data
+                        IdUser = data.IdRol,
+                        IdRol = (int)Enums.RolUser.Estandar,
+                        UserEntity = new UserEntity()
+                        {
+                            Name = data.Name,
+                            LastName = data.LastName,
+                            Email = data.Email,
+                            Password = data.Password,
+                        }
                     };
 
                     _unitOfWork.RolUserRepository.Insert(rolUser);
-                    result.IsSuccess = await _unitOfWork.Save() > 0;
-                    Convert.ToDouble(result);
+                    return await _unitOfWork.Save() > 0;
                 }
                 else
                     result.Message = "Email ya se encuestra registrado, utilizar otro!";
@@ -146,9 +175,11 @@ namespace MyBookShop.Domain.Domain.Services
             else
                 result.Message = "Usuario con Email Inválido";
 
-            
+
             return Convert.ToBoolean(result);
         }
+
+
 
         public async Task<ResponseDto> Register(UserDto data)
         {

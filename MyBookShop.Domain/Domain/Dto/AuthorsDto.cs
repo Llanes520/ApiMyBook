@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace MyBook.Domain.Domain.Dto.Books
+namespace MyBook.Domain.Domain.Dto
 {
-    public class ConsultBookDto : BookDto
+    public class AuthorsDto
     {
-        public string TypeBook { get; set; }
+        [Key]
+        public int Id { get; set; }
         public string Nombre { get; set; }
+        public string Apellidos { get; set; }
     }
 }

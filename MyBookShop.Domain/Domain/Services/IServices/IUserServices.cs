@@ -1,5 +1,6 @@
 ﻿using Infraestructure.Entity.Models;
 using MyBook.Domain.Domain.Dto;
+using MyBook.Domain.Domain.Dto.Users;
 using MyBookShop.Domain.Domain.Dto;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,10 @@ namespace MyBookShop.Domain.Domain.Services.Iservices
         Task<ResponseDto> Register(UserDto data);
         #endregion
 
-        List<UserEntity> GetAllUser();
-        UserEntity GetUser(int idUser);
-        Task<bool> UpdateUser(UserEntity user);
-        Task<bool> DeleteUser(int idUser);
-        Task<bool> CreateUser(UserEntity data);
+        List<UpdateUserDto> GetAllUser();
+        Task<ResponseDto> DeleteUser(int idUser);
+        Task<bool> InsertUser(InsertUserDto data);
+        Task<bool> UpdateUser(UpdateUserDto user);
 
     }
 }

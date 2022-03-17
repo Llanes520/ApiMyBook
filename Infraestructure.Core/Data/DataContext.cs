@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Infraestructure.Entity.Models.Security;
 
 namespace Infraestructure.Core.Data
 {
@@ -21,13 +22,13 @@ namespace Infraestructure.Core.Data
         public DbSet<PermissionEntity> PermissionEntity { get; set; } 
         public DbSet<RolPermissionEntity> RolPermissionEntity { get; set; } 
         public DbSet<TypePermissionEntity> TypePermissionEntity { get; set; }
+        public DbSet<AuthorsEntity> AuthorsEntities { get; set; }
 
         public DbSet<EditorialEntity> EditorialEntity { get; set; }
         public DbSet<BookEntity> BookEntity { get; set; }
          
-        public DbSet<StateEntity> StateEntity { get; set; }
+        public DbSet<Authors_has_BooksEntity> Authors_Has_BooksEntities { get; set; }
         public DbSet<TypeBookEntity> TypeBookEntity { get; set; }
-        public DbSet<TypeStateEntity> TypeStateEntity { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,13 +37,9 @@ namespace Infraestructure.Core.Data
                 .HasIndex(x => x.Email)
                 .IsUnique();
 
-            modelBuilder.Entity<TypeStateEntity>().Property(t => t.IdTypeState).ValueGeneratedNever();
             modelBuilder.Entity<TypePermissionEntity>().Property(t => t.IdTypePermission).ValueGeneratedNever();
-            modelBuilder.Entity<StateEntity>().Property(t => t.IdState).ValueGeneratedNever();
             modelBuilder.Entity<RolEntity>().Property(t => t.IdRol).ValueGeneratedNever();
             modelBuilder.Entity<PermissionEntity>().Property(t => t.IdPermission).ValueGeneratedNever();
         }
-
-
     }
 }

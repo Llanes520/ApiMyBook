@@ -14,8 +14,8 @@ namespace MyBook.Domain.Domain.Services.IServices
         List<ConsultBookDto> GetAllBook();
         public List<TypeBookDto> GetAllTypeBook();
         List<EditorialDto> GetAllEditorial();
-        Task<ResponseDto> DeleteBookAsync(int idBook);
-        Task<bool> InsertBookAsync(InsertBookDto book);
+        Task<ResponseDto> DeleteBookAsync(int book);
+        Task<bool> InsertBookAsync(BookDto book);
         Task<bool> UpdateBookAsync(BookDto book);
     }
 }

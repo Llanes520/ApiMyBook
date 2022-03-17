@@ -1,4 +1,5 @@
 ﻿using Common.Utils.Enums;
+using Common.Utils.Exeption;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models.Library;
 using Infraestructure.Entity.Models.Master;
@@ -34,25 +35,21 @@ namespace MyBook.Domain.Domain.Services
 
         public List<ConsultBookDto> GetAllBook()
         {
-            var pets = _unitOfWork.BooksRepository.GetAll(p => p.TypeBookEntity,
-                                                            p => p.StateEntity,
-                                                            p => p.EditorialEntity).ToList();
 
-            List<ConsultBookDto> list = pets.Select(x => new ConsultBookDto
+            var books = _unitOfWork.BooksRepository.GetAll(p => p.TypeBookEntity,
+                                                            p => p.EditorialEntity,
+                                                            p => p.Authors_Has_BooksEntities).ToList();
+
+            List<ConsultBookDto> list = books.Select(x => new ConsultBookDto
             {
                 IdBook = x.IdBook,
-                Name = x.Name,
-                Descriptin = x.Descriptin,
-                Author = x.Author,
-                DatePreRealease = x.DatePreRealease,
-                DateRealease = x.DateRealease,
+                Titulo = x.Titulo,
+                Sipnosis = x.Sipnosis,
+                Paginas = x.Num_Paginas,
                 TypeBook = x.TypeBookEntity.TypeBook,
-                State = x.StateEntity.State,
-                PreRelease = x.DatePreRealease.ToString("yyyy-MM-dd"),
-                IdState = x.IdState,
                 IdTypeBook = x.IdTypeBook,
                 IdEditorial = x.IdEditorial,
-                Editorial = x.EditorialEntity.Editorial,
+                Nombre = x.EditorialEntity.Nombre,
 
             }).ToList();
 
@@ -72,7 +69,7 @@ namespace MyBook.Domain.Domain.Services
 
             return list;
         }
-        
+
         public List<EditorialDto> GetAllEditorial()
         {
             List<EditorialEntity> typeEditorial = _unitOfWork.EditorialRepository.GetAll().ToList();
@@ -80,17 +77,17 @@ namespace MyBook.Domain.Domain.Services
             List<EditorialDto> list = typeEditorial.Select(x => new EditorialDto
             {
                 IdEditorial = x.IdEditorial,
-                Editorial = x.Editorial
+                Nombre = x.Nombre
             }).ToList();
 
             return list;
         }
 
-        public async Task<ResponseDto> DeleteBookAsync(int idBook)
+        public async Task<ResponseDto> DeleteBookAsync(int book)
         {
             ResponseDto response = new ResponseDto();
 
-            _unitOfWork.BooksRepository.Delete(idBook);
+            _unitOfWork.BooksRepository.Delete(book);
             response.IsSuccess = await _unitOfWork.Save() > 0;
             if (response.IsSuccess)
                 response.Message = "Se elminnó correctamente el libro";
@@ -100,20 +97,22 @@ namespace MyBook.Domain.Domain.Services
             return response;
         }
 
-        public async Task<bool> InsertBookAsync(InsertBookDto book)
+        public async Task<bool> InsertBookAsync(BookDto book)
         {
-            var bookEntity = new BookEntity()
+            Authors_has_BooksEntity authors_Has_BooksEntity = new Authors_has_BooksEntity()
             {
-                Name = book.Name,
-                Descriptin = book.Descriptin,
-                Author = book.Author,
-                DatePreRealease = book.DatePreRealease,
-                IdTypeBook = book.IdTypeBook,
-                IdState = (int)Enums.State.Preaprobado,
-                IdEditorial = book.IdEditorial,
+                Id_Authors = book.IdAuthors,
+                BookEntity = new BookEntity()
+                {
+                    Titulo = book.Titulo,
+                    Sipnosis = book.Sipnosis,
+                    Num_Paginas = book.Paginas,
+                    IdTypeBook = book.IdTypeBook,
+                    IdEditorial = book.IdEditorial,
+                }
             };
 
-            _unitOfWork.BooksRepository.Insert(bookEntity);
+            _unitOfWork.Authors_has_BooksRepository.Insert(authors_Has_BooksEntity);
             return await _unitOfWork.Save() > 0;
         }
 
@@ -124,10 +123,9 @@ namespace MyBook.Domain.Domain.Services
             BookEntity bookEntity = _unitOfWork.BooksRepository.FirstOrDefault(x => x.IdBook == book.IdBook);
             if (bookEntity != null)
             {
-                bookEntity.Name = book.Name;
-                bookEntity.Descriptin = book.Descriptin;
-                bookEntity.Author = book.Author;
-                bookEntity.DatePreRealease = book.DatePreRealease;
+                bookEntity.Titulo = book.Titulo;
+                bookEntity.Sipnosis = book.Sipnosis;
+                bookEntity.Num_Paginas = book.Paginas;
                 bookEntity.IdTypeBook = book.IdTypeBook;
                 bookEntity.IdEditorial = book.IdEditorial;
 

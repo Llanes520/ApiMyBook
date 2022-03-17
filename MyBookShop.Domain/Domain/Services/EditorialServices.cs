@@ -32,7 +32,8 @@ namespace MyBook.Domain.Domain.Services
             List<EditorialDto> list = typeEditorial.Select(x => new EditorialDto
             {
                 IdEditorial = x.IdEditorial,
-                Editorial = x.Editorial
+                Nombre = x.Nombre,
+                Sede = x.Sede
 
             }).ToList();
 
@@ -58,7 +59,8 @@ namespace MyBook.Domain.Domain.Services
         {
             var editorialEntity = new EditorialEntity()
             {
-                Editorial = editorial.Editorial
+                Nombre = editorial.Nombre,
+                Sede = editorial.Sede
             };
 
             _unitOfWork.EditorialRepository.Insert(editorialEntity);
@@ -72,7 +74,8 @@ namespace MyBook.Domain.Domain.Services
             EditorialEntity editorialEntity = _unitOfWork.EditorialRepository.FirstOrDefault(x => x.IdEditorial == Edit.IdEditorial);
             if (editorialEntity != null)
             {
-                editorialEntity.Editorial = Edit.Editorial;
+                editorialEntity.Nombre = Edit.Nombre;
+                editorialEntity.Sede = Edit.Sede;
 
                 _unitOfWork.EditorialRepository.Update(editorialEntity);
 

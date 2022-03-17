@@ -68,7 +68,6 @@ namespace Common.Utils.Enums
         public enum RolUser
         {
             Administrador = 1,
-            Editor = 2,
             Estandar = 3,
         }
 

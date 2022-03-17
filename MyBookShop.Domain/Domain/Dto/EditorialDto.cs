@@ -11,6 +11,8 @@ namespace MyBook.Domain.Domain.Dto.Editoriales
         public int IdEditorial { get; set; }
 
         [MaxLength(100)]
-        public string Editorial { get; set; }
+        public string Nombre { get; set; }
+
+        public string Sede { get; set; }
     }
 }

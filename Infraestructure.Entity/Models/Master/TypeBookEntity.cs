@@ -16,6 +16,6 @@ namespace Infraestructure.Entity.Models.Master
         [MaxLength(100)]
         public string TypeBook { get; set; }
 
-        public BookEntity bookEntity { get; set; }
+        public IEnumerable<BookEntity> BookEntities { get; set; }
     }
 }

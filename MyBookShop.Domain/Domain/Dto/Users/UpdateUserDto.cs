@@ -1,13 +1,14 @@
-﻿using MyBook.Domain.Domain.Dto;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace MyBookShop.Domain.Domain.Dto
+namespace MyBook.Domain.Domain.Dto.Users
 {
-    public class UserDto : LoginDto
+    public class UpdateUserDto
     {
+        public int IdUser { get; set; }
+
         [Required(ErrorMessage = "El nombre es requerido")]
         [MaxLength(100)]
         [Display(Name = "Nombre")]
@@ -17,14 +18,7 @@ namespace MyBookShop.Domain.Domain.Dto
         [MaxLength(100)]
         [Display(Name = "Apellido")]
         public string LastName { get; set; }
-
-
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirmar Contraseña")]
-        [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
-        public string ConfirmPassword { get; set; }
-
-
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -1,16 +1,10 @@
 ﻿using ApiBook.Handler;
-using Common.Utils.Constant;
 using Common.Utils.Resource;
-using Common.Utils.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBook.Domain.Domain.Dto;
-using MyBook.Domain.Domain.Dto.Books;
-using MyBook.Domain.Domain.Dto.Editoriales;
 using MyBook.Domain.Domain.Services.IServices;
 using MyBookShop.Domain.Domain.Dto;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,32 +14,33 @@ namespace ApiBook.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [TypeFilter(typeof(CustomExceptionHandler))]
-    public class BooksControler : ControllerBase
+    public class AuthorsController : Controller
     {
-        #region Attributes
-        private readonly IBookService _bookService;
+        #region Atributes
+        private readonly IAuthorsServices _authorsServices;
         #endregion
 
         #region Builder
-        public BooksControler(IBookService bookService)
+        public AuthorsController(IAuthorsServices authorsServices)
         {
-            _bookService = bookService;
+            _authorsServices = authorsServices;
         }
         #endregion
 
         #region Methods
+
         /// <summary>
-        /// Obtener todos los libros
+        /// Obtener todos los Autores
         /// </summary>
         /// <returns></returns>
         /// <response code="200">OK! </response>
         /// <response code="400">Business Exception</response>
         /// <response code="500">Oops! Can't process your request now</response>
         [HttpGet]
-        [Route("GetAllBook")]
-        public IActionResult GetAllBook()
+        [Route("GetAllAthors")]
+        public IActionResult GetAllAthors()
         {
-            List<ConsultBookDto> list = _bookService.GetAllBook();
+            List<AuthorsDto> list = _authorsServices.GetAllAthors();
 
             ResponseDto response = new ResponseDto()
             {
@@ -55,65 +50,23 @@ namespace ApiBook.Controllers
             };
 
             return Ok(response);
-        }
+        }      
 
+  
         /// <summary>
-        /// Obtener todos los tipos de libros
+        /// Eliminar un Autor en específico
         /// </summary>
-        /// <returns></returns>
-        /// <response code="200">OK! </response>
-        /// <response code="400">Business Exception</response>
-        /// <response code="500">Oops! Can't process your request now</response>
-        [HttpGet]
-        [Route("GetAllTypeBook")]
-        public IActionResult GetAllTypeBook()
-        {
-            List<TypeBookDto> result = _bookService.GetAllTypeBook();
-            ResponseDto response = new ResponseDto()
-            {
-                IsSuccess = true,
-                Result = result,
-                Message = string.Empty
-            };
-            return Ok(response);
-        }
-
-        /// <summary>
-        /// Obtener todas las editoriales
-        /// </summary>
-        /// <returns></returns>
-        /// <response code="200">OK! </response>
-        /// <response code="400">Business Exception</response>
-        /// <response code="500">Oops! Can't process your request now</response>
-        [HttpGet]
-        [Route("GetAllEditorial")]
-        public IActionResult GetAllEditorial()
-        {
-            List<EditorialDto> result = _bookService.GetAllEditorial();
-
-            ResponseDto response = new ResponseDto()
-            {
-                IsSuccess = true,
-                Result = result,
-                Message = string.Empty
-            };
-            return Ok(response);
-        }
-
-        /// <summary>
-        /// Eliminar un libro en específico
-        /// </summary>
-        /// <param name="book"></param>
+        /// <param name="idAthor"></param>
         /// <returns></returns>
         /// <response code="200">OK! </response>
         /// <response code="400">Business Exception</response>
         /// <response code="500">Oops! Can't process your request now</response>
         [HttpDelete]
-        [Route("DeleteBook")]
-        public async Task<IActionResult> DeleteBook(int book)
+        [Route("DeleteAuthors")]
+        public async Task<IActionResult> DeleteAuthors(int idAthor)
         {
             IActionResult response;
-            ResponseDto result = await _bookService.DeleteBookAsync(book);
+            ResponseDto result = await _authorsServices.DeleteAuthorsAsync(idAthor);
             if (result.IsSuccess)
                 response = Ok(result);
             else
@@ -123,20 +76,20 @@ namespace ApiBook.Controllers
         }
 
         /// <summary>
-        /// Agregar un nuevo libro
+        /// Agregar un nuevo Autor
         /// </summary>
-        /// <param name="book"></param>
+        /// <param name="Author"></param>
         /// <returns></returns>
         /// <response code="200">OK! </response>
         /// <response code="400">Business Exception</response>
         /// <response code="500">Oops! Can't process your request now</response>
         [HttpPost]
-        [Route("InsertBook")]
-        public async Task<IActionResult> InsertBook(BookDto book)
+        [Route("InsertAuthors")]
+        public async Task<IActionResult> InsertAuthors(AuthorsDto Author)
         {
             IActionResult response;
 
-            bool result = await _bookService.InsertBookAsync(book);
+            bool result = await _authorsServices.InsertAuthorsAsync(Author);
             ResponseDto responseDto = new ResponseDto()
             {
                 IsSuccess = result,
@@ -153,20 +106,20 @@ namespace ApiBook.Controllers
         }
 
         /// <summary>
-        /// Actualziar un libro en específico (No toca ingresar el estado)
+        /// Actualziar un autor en específico
         /// </summary>
-        /// <param name="book"></param>
+        /// <param name="author"></param>
         /// <returns></returns>
         /// <response code="200">OK! </response>
         /// <response code="400">Business Exception</response>
         /// <response code="500">Oops! Can't process your request now</response>
         [HttpPut]
-        [Route("UpdateBook")]
-        public async Task<IActionResult> UpdateBook(BookDto book)
+        [Route("UpdateAuthor")]
+        public async Task<IActionResult> UpdateAuthor(AuthorsDto author)
         {
             IActionResult response;
 
-            bool result = await _bookService.UpdateBookAsync(book);
+            bool result = await _authorsServices.UpdateAuthorsAsync(author);
             ResponseDto responseDto = new ResponseDto()
             {
                 IsSuccess = result,
@@ -183,5 +136,7 @@ namespace ApiBook.Controllers
         }
 
         #endregion
+
+
     }
 }

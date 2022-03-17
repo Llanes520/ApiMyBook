@@ -2,6 +2,7 @@
 using Infraestructure.Entity.Models;
 using Infraestructure.Entity.Models.Library;
 using Infraestructure.Entity.Models.Master;
+using Infraestructure.Entity.Models.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +33,6 @@ namespace Infraestructure.Core.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckUserAsync();
-            await CheckTypeStateAsync();
-            await CheckStateAsync();
             await CheckTypePermissionAsync();
             await CheckPermissionAsync();
             await CheckRolAsync();
@@ -41,71 +40,9 @@ namespace Infraestructure.Core.Data
             await CheckRolUserAsync();
             await CheckTypeBookEntityAsync();
             await CheckEditorialEntityAsync();
+            await CheckAuthorsEntityAsync();
         }
 
-        private async Task CheckTypeStateAsync()
-        {
-            if (!_context.TypeStateEntity.Any())
-            {
-                _context.TypeStateEntity.AddRange(new List<TypeStateEntity>
-                {
-                    new TypeStateEntity
-                    {
-                        IdTypeState=(int)Enums.TypeState.EstadoUsuario,
-                        TypeState="Estado de Usuarios"
-                    },
-                    new TypeStateEntity
-                    {
-                        IdTypeState=(int)Enums.TypeState.EstadoLibros,
-                        TypeState="Estado de las Citas"
-                    },
-                });
-
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private async Task CheckStateAsync()
-        {
-            if (!_context.StateEntity.Any())
-            {
-                _context.StateEntity.AddRange(new List<StateEntity>
-                {
-                    new StateEntity
-                    {
-                        IdTypeState=(int)Enums.TypeState.EstadoUsuario,
-                        IdState=(int)Enums.State.UsuarioActivo,
-                        State="Activo"
-                    },
-                    new StateEntity
-                    {
-                        IdTypeState=(int)Enums.TypeState.EstadoUsuario,
-                        IdState=(int)Enums.State.UsuarioInactivo,
-                        State="Inactivo"
-                    },
-                    new StateEntity
-                    {
-                        IdTypeState=(int)Enums.TypeState.EstadoUsuario,
-                        IdState=(int)Enums.State.UsuarioSuspendido,
-                        State="Suspendido"
-                    },
-                    new StateEntity
-                    {
-                        IdTypeState=(int)Enums.TypeState.EstadoLibros,
-                        IdState=(int)Enums.State.Preaprobado,
-                        State="Libro en preaprobado"
-                    },
-                    new StateEntity
-                    {
-                        IdTypeState=(int)Enums.TypeState.EstadoLibros,
-                        IdState=(int)Enums.State.Aprobado,
-                        State="Libro aprobado"
-                    }
-                });
-
-                await _context.SaveChangesAsync();
-            }
-        }
 
         private async Task CheckTypePermissionAsync()
         {
@@ -272,11 +209,6 @@ namespace Infraestructure.Core.Data
                         IdRol=(int)Enums.RolUser.Administrador,
                         Rol="Administrador"
                     },
-                    new RolEntity
-                    {
-                        IdRol=(int)Enums.RolUser.Editor,
-                        Rol="Veterinario"
-                    },
                      new RolEntity
                     {
                         IdRol=(int)Enums.RolUser.Estandar,
@@ -340,6 +272,7 @@ namespace Infraestructure.Core.Data
                 await _context.SaveChangesAsync();
             }
         }
+
         private async Task CheckTypeBookEntityAsync()
         {
             if (!_context.TypeBookEntity.Any())
@@ -362,7 +295,9 @@ namespace Infraestructure.Core.Data
 
                 await _context.SaveChangesAsync();
             }
-        }private async Task CheckEditorialEntityAsync()
+        }
+
+        private async Task CheckEditorialEntityAsync()
         {
             if (!_context.EditorialEntity.Any())
             {
@@ -370,15 +305,35 @@ namespace Infraestructure.Core.Data
                 {
                     new EditorialEntity
                     {
-                        Editorial = "Periodistico"
+                        Nombre = "Periodistico",
+                        Sede = "Bogota"
                     },
                     new EditorialEntity
                     {
-                        Editorial = "Noticia"
+                        Nombre = "Noticia",
+                        Sede = "Cali"
                     },
                     new EditorialEntity
                     {
-                        Editorial = "Historieta"
+                        Nombre = "Historieta",
+                        Sede = "Medellin"
+                    },
+                });
+
+                await _context.SaveChangesAsync();
+            }
+        }
+        
+        private async Task CheckAuthorsEntityAsync()
+        {
+            if (!_context.AuthorsEntities.Any())
+            {
+                _context.AuthorsEntities.AddRange(new List<AuthorsEntity>
+                {
+                    new AuthorsEntity
+                    {
+                        Nombre = "Pablo",
+                        Apellidos = "Rodrigez"
                     },
                 });
 

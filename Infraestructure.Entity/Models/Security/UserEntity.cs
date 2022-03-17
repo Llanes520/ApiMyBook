@@ -1,4 +1,5 @@
 ﻿using Infraestructure.Entity.Models.Library;
+using Infraestructure.Entity.Models.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,10 +26,9 @@ namespace Infraestructure.Entity.Models
         [MaxLength(200)]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "La contraseña es requerido")]
-        [MaxLength(200)]
+        [Required(ErrorMessage = "La contraseña es requerida")]
+        [MaxLength(200)] 
         public string Password { get; set; }
-
         public IEnumerable<RolUserEntity> RolUserEntities { get; set;}
 
         [NotMapped]

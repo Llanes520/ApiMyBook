@@ -31,6 +31,7 @@ namespace ApiBook.Handler
             services.AddTransient<IRolServices, RolServices>();
             services.AddTransient<IBookService, BookServices>();
             services.AddTransient<IEditorialServices, EditorialServices>();
+            services.AddTransient<IAuthorsServices, AuthorsServices>();
         }
     }
 }
